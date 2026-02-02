@@ -1,0 +1,1 @@
+-v --force --timestamp=none --sign - /Users/shahdelrefai/SkinCareTracker/bin/Debug/net10.0-maccatalyst/maccatalyst-arm64/SkinCareTracker.app/Contents/Frameworks/libSkiaSharp.framework

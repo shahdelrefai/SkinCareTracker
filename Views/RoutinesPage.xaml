@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkinCareTracker.ViewModels"
+             xmlns:models="clr-namespace:SkinCareTracker.Models"
+             x:Class="SkinCareTracker.Views.RoutinesPage"
+             x:DataType="vm:RoutinesViewModel"
+             Title="Routines">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="*,Auto">
+        <RefreshView Grid.Row="0"
+                     IsRefreshing="{Binding IsLoading}"
+                     Command="{Binding LoadCommand}">
+            <CollectionView ItemsSource="{Binding AllRoutinesGrouped}"
+                            IsGrouped="True">
+
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="models:RoutineGroup">
+                    <VerticalStackLayout Padding="10,15,10,5">
+                        <Label Text="{Binding Key}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Routine">
+                    <Border Margin="10,2"
+                            Padding="15"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{Binding IsArchived, Converter={StaticResource BoolToBackgroundConverter}}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RoutinesViewModel}}, Path=ViewCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="{Binding Name}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                                <Label FontSize="14" TextColor="Gray">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Steps.Count}" />
+                                            <Span Text=" steps • " />
+                                            <Span Text="{Binding TimeOfDay}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label FontSize="12" TextColor="DarkGray">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Started " />
+                                            <Span Text="{Binding StartDate, StringFormat='{0:MMM dd, yyyy}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Label Grid.Column="1"
+                                   Text="›"
+                                   FontSize="24"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="20" VerticalOptions="Center">
+                    <Label Text="No routines yet"
+                           FontSize="18"
+                           HorizontalOptions="Center"
+                           TextColor="Gray" />
+                    <Label Text="Tap + to create your first routine"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Margin="0,5,0,0"
+                           TextColor="Gray" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+             <CollectionView.Footer>
+                <VerticalStackLayout Padding="10,15,10,20">
+                    <Label Text="{Binding ShowArchived, Converter={StaticResource BoolToArchiveTextConverter}}"
+                           TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                           FontSize="15"
+                           HorizontalOptions="Start"
+                           IsVisible="{Binding HasArchivedRoutines}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleArchivedCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+            </CollectionView.Footer>
+
+        </CollectionView>
+    </RefreshView>
+
+        <!-- <Label Grid.Row="1"
+               Text="{Binding ShowArchived, Converter={StaticResource BoolToArchiveTextConverter}}"
+               TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+               FontSize="15"
+               HorizontalOptions="Start"
+               Padding="10,10,0,5"
+               IsVisible="{Binding HasArchivedRoutines}">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ToggleArchivedCommand}"/>
+            </Label.GestureRecognizers>
+        </Label> -->
+    </Grid>
+
+</ContentPage>

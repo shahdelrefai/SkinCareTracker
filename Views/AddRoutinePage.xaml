@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkinCareTracker.ViewModels"
+             x:Class="SkinCareTracker.Views.AddRoutinePage"
+             x:DataType="vm:AddRoutineViewModel"
+             Title="Add Routine">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Routine Name" FontAttributes="Bold" />
+            <Entry Text="{Binding Name}"
+                   Placeholder="e.g., Morning Skincare" />
+
+            <Label Text="Time of Day" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding TimeOfDayOptions}"
+                    SelectedItem="{Binding SelectedTimeOfDay}" />
+
+            <Label Text="STEPS" FontAttributes="Bold" FontSize="16" Margin="0,20,0,0" />
+
+            <!-- Empty state message -->
+            <Label Text="No steps yet. Tap 'Add Step' below."
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,10"
+                   TextColor="Gray"
+                   IsVisible="{Binding HasSteps, Converter={StaticResource InvertedBoolConverter}}" />
+
+            <!-- Steps list - uses BindableLayout instead of CollectionView for compact sizing -->
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Steps}"
+                                 Spacing="5">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:RoutineStepViewModel">
+                        <Border Padding="10" StrokeShape="RoundRectangle 5">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <!-- Step Number -->
+                                <Label Grid.Column="0"
+                                       Text="{Binding Order}"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center"
+                                       WidthRequest="30" />
+
+                                <!-- Product Info -->
+                                <VerticalStackLayout Grid.Column="1">
+                                    <Label Text="{Binding Product.Name}"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                                    <Label Text="{Binding Instructions}"
+                                           FontSize="12"
+                                           TextColor="Gray" />
+                                    <Label FontSize="12" TextColor="DarkGray">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Wait: " />
+                                                <Span Text="{Binding WaitTimeMinutes}" />
+                                                <Span Text=" min" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+
+                                <!-- Actions -->
+                                <HorizontalStackLayout Grid.Column="2" Spacing="5">
+                                    <Button Text="↑"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MoveStepUpCommand}"
+                                            CommandParameter="{Binding .}"
+                                            WidthRequest="35"
+                                            HeightRequest="35"
+                                            Padding="0"
+                                            FontSize="14" />
+                                    <Button Text="↓"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MoveStepDownCommand}"
+                                            CommandParameter="{Binding .}"
+                                            WidthRequest="35"
+                                            HeightRequest="35"
+                                            Padding="0"
+                                            FontSize="14" />
+                                    <Button Text="×"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveStepCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="Red"
+                                            WidthRequest="35"
+                                            HeightRequest="35"
+                                            Padding="0"
+                                            FontSize="16" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Button Text="+ Add Step"
+                    Command="{Binding AddStepCommand}"
+                    BackgroundColor="LightGray"
+                    TextColor="Black" />
+
+            <Label Text="SCHEDULE" FontAttributes="Bold" FontSize="16" Margin="0,20,0,0" />
+
+            <Label Text="Days" FontAttributes="Bold" />
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding DaysOfWeek}"
+                                   Spacing="0"
+                                   HorizontalOptions="Center">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SelectableDayViewModel">
+                        <VerticalStackLayout WidthRequest="42">
+                            <CheckBox IsChecked="{Binding IsSelected}"
+                                      HorizontalOptions="Center" />
+                            <Label Text="{Binding ShortName}"
+                                   HorizontalOptions="Center"
+                                   FontSize="11" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+
+            <Label Text="Time" FontAttributes="Bold" />
+            <TimePicker Format="hh:mm tt" Time="{Binding ScheduledTime}" />
+
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <CheckBox Grid.Column="0" IsChecked="{Binding EnableReminders}" />
+                <Label Grid.Column="1" Text="Enable Reminders" VerticalOptions="Center" />
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="LightGray"
+                        TextColor="Black" />
+
+                <Button Grid.Column="1"
+                        Text="Save Routine"
+                        Command="{Binding SaveCommand}" />
+            </Grid>
+
+            <ActivityIndicator IsRunning="{Binding IsSaving}"
+                               IsVisible="{Binding IsSaving}"
+                               HorizontalOptions="Center"
+                               Margin="0,10,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

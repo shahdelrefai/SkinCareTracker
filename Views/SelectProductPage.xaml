@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkinCareTracker.ViewModels"
+             xmlns:models="clr-namespace:SkinCareTracker.Models"
+             x:Class="SkinCareTracker.Views.SelectProductPage"
+             x:DataType="vm:SelectProductViewModel"
+             Title="Add Step">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Label Grid.Row="0"
+               Text="SELECT PRODUCT"
+               FontSize="16"
+               FontAttributes="Bold"
+               Margin="15,15,15,5" />
+
+        <!-- Product List -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsLoading}"
+                     Command="{Binding LoadCommand}"
+                     Padding="10,0">
+            <CollectionView ItemsSource="{Binding Products}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedProduct}">
+                <CollectionView.EmptyView>
+                    <Label Text="No products available"
+                           HorizontalOptions="Center"
+                           Margin="0,20,0,0"
+                           TextColor="Gray" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Product">
+                        <Frame Padding="15"
+                               Margin="5">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <Ellipse Grid.Column="0"
+                                         WidthRequest="20" 
+                                         HeightRequest="20"
+                                         Stroke="{StaticResource Primary}"
+                                         StrokeThickness="2"
+                                         VerticalOptions="Center" />
+
+                                <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                                    <Label Text="{Binding Brand}"
+                                           FontSize="14"
+                                           TextColor="Gray" />
+                                    <Label Text="{Binding Category}"
+                                           FontSize="12"
+                                           TextColor="DarkGray" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Bottom Button Panel -->
+        <VerticalStackLayout Grid.Row="2" 
+                             Padding="20"
+                             Spacing="15"
+                             BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}">
+            
+            <!-- Step Details (only visible when product selected) -->
+            <VerticalStackLayout Spacing="10"
+                                 IsVisible="{Binding SelectedProduct, Converter={StaticResource IsNotNullConverter}}">
+                <Label Text="STEP DETAILS" FontAttributes="Bold" />
+
+                <Label Text="Instructions" />
+                <Entry Text="{Binding Instructions}"
+                       Placeholder="e.g., Apply gently to face" />
+
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Label Text="Wait time after this step"
+                           VerticalOptions="Center" />
+                    <HorizontalStackLayout Grid.Column="1" Spacing="5">
+                        <Stepper Value="{Binding WaitTimeMinutes}"
+                                 Minimum="0"
+                                 Maximum="30"
+                                 Increment="1" />
+                        <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} min'}"
+                               VerticalOptions="Center"
+                               FontAttributes="Bold" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="LightGray"
+                        TextColor="Black" />
+
+                <Button Grid.Column="1"
+                        Text="Add Product"
+                        Command="{Binding AddToRoutineCommand}"
+                        IsEnabled="{Binding SelectedProduct, Converter={StaticResource IsNotNullConverter}}" />
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

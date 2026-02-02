@@ -1,0 +1,1 @@
+-v --force --timestamp=none --sign - /Users/shahdelrefai/SkinCareTracker/bin/Debug/net10.0-ios/iossimulator-arm64/SkinCareTracker.app/libSystem.Globalization.Native.dylib

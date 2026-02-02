@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SkinCareTracker.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:SkinCareTracker.Views"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <ShellContent
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate views:DashboardPage}"
+            Route="dashboard" />
+
+        <ShellContent
+            Title="Products"
+            ContentTemplate="{DataTemplate views:ProductsPage}"
+            Route="products" />
+
+        <ShellContent
+            Title="Routines"
+            ContentTemplate="{DataTemplate views:RoutinesPage}"
+            Route="routines" />
+
+        <ShellContent
+            Title="Daily Log"
+            ContentTemplate="{DataTemplate views:DailyLogPage}"
+            Route="dailylog" />
+
+        <ShellContent
+            Title="Insights"
+            ContentTemplate="{DataTemplate views:InsightsPage}"
+            Route="insights" />
+    </TabBar>
+
+</Shell>
