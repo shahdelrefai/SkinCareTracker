@@ -1,9 +1,299 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkinCareTracker.ViewModels"
+             xmlns:models="clr-namespace:SkinCareTracker.Models"
+             xmlns:converters="clr-namespace:SkinCareTracker.Converters"
              x:Class="SkinCareTracker.Views.DailyLogPage"
-             Title="DailyLog">
-    <VerticalStackLayout Padding="20" VerticalOptions="Center">
-        <Label Text="DailyLog" FontSize="32" HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:DataType="vm:DailyLogViewModel"
+             Title="Daily Log">
+
+    <ContentPage.Resources>
+        <converters:FilePathToImageSourceConverter x:Key="FilePathToImageSourceConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="20">
+
+            <!-- Date Navigation -->
+            <Border StrokeShape="RoundRectangle 10" Padding="15">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="◀"
+                            Command="{Binding PreviousDayCommand}"
+                            WidthRequest="50"
+                            HeightRequest="40" />
+
+                    <VerticalStackLayout Grid.Column="1" 
+                                         VerticalOptions="Center"
+                                         HorizontalOptions="Center">
+                        <Label Text="{Binding SelectedDate, StringFormat='{0:dddd}'}"
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               TextColor="Gray" />
+                        <Label Text="{Binding SelectedDate, StringFormat='{0:MMMM dd, yyyy}'}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                        <Button Text="Today"
+                                Command="{Binding TodayCommand}"
+                                FontSize="12"
+                                Padding="10,5"
+                                HorizontalOptions="Center"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="2"
+                            Text="▶"
+                            Command="{Binding NextDayCommand}"
+                            WidthRequest="50"
+                            HeightRequest="40" />
+                </Grid>
+            </Border>
+
+            <!-- Routines Completed -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="ROUTINES"
+                       FontSize="18"
+                       FontAttributes="Bold" />
+
+                <CollectionView ItemsSource="{Binding ScheduledRoutines}">
+                    <CollectionView.EmptyView>
+                        <Label Text="No routines scheduled"
+                               TextColor="Gray"
+                               Margin="0,10,0,0" />
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:RoutineCheckItem">
+                            <Border Margin="0,2" Padding="10" StrokeShape="RoundRectangle 8">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <CheckBox Grid.Column="0"
+                                              IsChecked="{Binding IsCompleted}"
+                                              Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DailyLogViewModel}}, Path=ToggleRoutineCompletionCommand}"
+                                              CommandParameter="{Binding .}" />
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Routine.Name}"
+                                               FontSize="16"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Routine.Steps.Count, StringFormat='{0} steps'}"
+                                               FontSize="12"
+                                               TextColor="Gray" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- Food Log -->
+            <VerticalStackLayout Spacing="10">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="FOOD LOG"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1"
+                            Text="+ Add"
+                            Command="{Binding AddFoodLogCommand}"
+                            FontSize="14"
+                            Padding="15,5" />
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding FoodLogs}">
+                    <CollectionView.EmptyView>
+                        <Label Text="No food logged today"
+                               TextColor="Gray"
+                               Margin="0,10,0,0" />
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FoodLog">
+                            <Border Margin="0,2" Padding="15" StrokeShape="RoundRectangle 8">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                    <Label Grid.Column="0"
+                                           FontSize="24"
+                                           VerticalOptions="Center">
+                                        <Label.Text>
+                                            <Binding Path="MealType">
+                                                <Binding.Converter>
+                                                    <vm:MealTypeToEmojiConverter />
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
+
+                                    <VerticalStackLayout Grid.Column="1">
+                                        <Label Text="{Binding MealType}"
+                                               FontSize="14"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Description}"
+                                               FontSize="14" />
+                                        <Label Text="{Binding LoggedAt, StringFormat='{0:h:mm tt}'}"
+                                               FontSize="12"
+                                               TextColor="Gray" />
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="2"
+                                            Text="×"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DailyLogViewModel}}, Path=RemoveFoodLogCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="Red"
+                                            TextColor="White"
+                                            WidthRequest="40"
+                                            HeightRequest="40"
+                                            CornerRadius="20"
+                                            FontSize="20" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- Skin Remarks -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="SKIN REMARKS"
+                       FontSize="18"
+                       FontAttributes="Bold" />
+
+                <Label Text="Observation" FontSize="14" FontAttributes="Bold" />
+                <Editor Text="{Binding SkinObservation}"
+                        Placeholder="How does your skin look and feel today?"
+                        HeightRequest="100"
+                        AutoSize="TextChanges" />
+
+                <Label Text="Acne Level" FontSize="14" FontAttributes="Bold" Margin="0,10,0,0" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <Slider Grid.Column="0"
+                            Value="{Binding AcneLevel}"
+                            Minimum="1"
+                            Maximum="10" />
+                    <Label Grid.Column="1"
+                           Text="{Binding AcneLevel}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           WidthRequest="30"
+                           HorizontalTextAlignment="End"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <Label Text="Dryness Level" FontSize="14" FontAttributes="Bold" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <Slider Grid.Column="0"
+                            Value="{Binding DrynessLevel}"
+                            Minimum="1"
+                            Maximum="10" />
+                    <Label Grid.Column="1"
+                           Text="{Binding DrynessLevel}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           WidthRequest="30"
+                           HorizontalTextAlignment="End"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <Label Text="Oiliness Level" FontSize="14" FontAttributes="Bold" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <Slider Grid.Column="0"
+                            Value="{Binding OilinessLevel}"
+                            Minimum="1"
+                            Maximum="10" />
+                    <Label Grid.Column="1"
+                           Text="{Binding OilinessLevel}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           WidthRequest="30"
+                           HorizontalTextAlignment="End"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <Label Text="Redness Level" FontSize="14" FontAttributes="Bold" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <Slider Grid.Column="0"
+                            Value="{Binding RednessLevel}"
+                            Minimum="1"
+                            Maximum="10" />
+                    <Label Grid.Column="1"
+                           Text="{Binding RednessLevel}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           WidthRequest="30"
+                           HorizontalTextAlignment="End"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <Button Text="Save Skin Remark"
+                        Command="{Binding SaveSkinRemarkCommand}"
+                        Margin="0,10,0,0" />
+
+                <!-- Photos -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,15,0,0">
+                    <Label Grid.Column="0"
+                           Text="PHOTOS"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1"
+                            Text="📷 Add"
+                            Command="{Binding AddPhotoCommand}"
+                            FontSize="14"
+                            Padding="15,5" />
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding SkinPhotos}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="10"
+                                         VerticalItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.EmptyView>
+                        <Label Text="No photos yet"
+                               TextColor="Gray"
+                               Margin="0,10,0,0" />
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SkinPhoto">
+                            <Border StrokeShape="RoundRectangle 10"
+                                    HeightRequest="150">
+                                <Grid>
+                                    <Image Source="{Binding PhotoSource}"
+                                           Aspect="AspectFill">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DailyLogViewModel}}, Path=ViewPhotoCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Button Text="×"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DailyLogViewModel}}, Path=RemovePhotoCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="Red"
+                                            TextColor="White"
+                                            WidthRequest="30"
+                                            HeightRequest="30"
+                                            CornerRadius="15"
+                                            FontSize="16"
+                                            Padding="0"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Start"
+                                            Margin="5" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SkinCareTracker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+a989c375fa3f0976e4762b26d4a45fece3f78373")]
 [assembly: System.Reflection.AssemblyProductAttribute("SkinCareTracker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SkinCareTracker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

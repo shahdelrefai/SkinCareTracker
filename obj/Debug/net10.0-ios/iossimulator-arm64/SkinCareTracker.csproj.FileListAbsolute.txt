@@ -345,3 +345,4 @@
 /Users/shahdelrefai/SkinCareTracker/bin/Debug/net10.0-ios/iossimulator-arm64/Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll
 /Users/shahdelrefai/SkinCareTracker/bin/Debug/net10.0-ios/iossimulator-arm64/Microsoft.VisualStudio.DesignTools.TapContract.dll
 /Users/shahdelrefai/SkinCareTracker/bin/Debug/net10.0-ios/iossimulator-arm64/Microsoft.VisualStudio.DesignTools.XamlTapContract.dll
+/Users/shahdelrefai/SkinCareTracker/obj/Debug/net10.0-ios/iossimulator-arm64/SkinCareTracker.sourcelink.json

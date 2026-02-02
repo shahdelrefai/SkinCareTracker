@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkinCareTracker.ViewModels"
+             x:Class="SkinCareTracker.Views.AddFoodLogPage"
+             x:DataType="vm:AddFoodLogViewModel"
+             Title="Add Food Log">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Meal Type" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding MealTypes}"
+                    SelectedItem="{Binding SelectedMealType}" />
+
+            <Label Text="What did you eat?" FontAttributes="Bold" />
+            <Editor Text="{Binding Description}"
+                    Placeholder="e.g., Oatmeal with banana, coffee"
+                    HeightRequest="150"
+                    AutoSize="TextChanges" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="LightGray"
+                        TextColor="Black" />
+
+                <Button Grid.Column="1"
+                        Text="Save"
+                        Command="{Binding SaveCommand}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -19,6 +19,8 @@
             <converters:BoolToReminderTextConverter x:Key="BoolToReminderTextConverter" />
             <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter" />
             <converters:StringEqualsConverter x:Key="StringEqualsConverter" />
+            <converters:MealTypeToEmojiConverter x:Key="MealTypeToEmojiConverter" />
+            <converters:FilePathToImageSourceConverter x:Key="FilePathToImageSourceConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

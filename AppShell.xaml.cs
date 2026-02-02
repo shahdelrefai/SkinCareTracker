@@ -10,9 +10,11 @@ public partial class AppShell : Shell
 
 		// Register routes for navigation
 		Routing.RegisterRoute("addproduct", typeof(AddProductPage));
-		Routing.RegisterRoute("productdetail", typeof(Views.ProductDetailPage));
-		Routing.RegisterRoute("addroutine", typeof(Views.AddRoutinePage));
-		Routing.RegisterRoute("routinedetail", typeof(Views.RoutineDetailPage));
-		Routing.RegisterRoute("selectproduct", typeof(Views.SelectProductPage));
+		Routing.RegisterRoute("productdetail", typeof(ProductDetailPage));
+		Routing.RegisterRoute("addroutine", typeof(AddRoutinePage));
+		Routing.RegisterRoute("routinedetail", typeof(RoutineDetailPage));
+		Routing.RegisterRoute("selectproduct", typeof(SelectProductPage));
+		Routing.RegisterRoute("addfoodlog", typeof(AddFoodLogPage));
+		Routing.RegisterRoute("photoviewer", typeof(PhotoViewerPage));
 	}
 }

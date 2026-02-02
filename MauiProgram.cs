@@ -56,6 +56,15 @@ public static class MauiProgram
 		builder.Services.AddTransient<RoutineDetailViewModel>();
 		builder.Services.AddTransient<RoutineDetailPage>();
 
+		// Daily Logs
+		builder.Services.AddSingleton<DailyLogRepository>();
+		builder.Services.AddTransient<DailyLogViewModel>();
+
+		builder.Services.AddTransient<DailyLogPage>();
+
+		builder.Services.AddTransient<AddFoodLogViewModel>();
+		builder.Services.AddTransient<AddFoodLogPage>();
+
 
 	builder.Services.AddTransient<ProductDetailPage>();
 

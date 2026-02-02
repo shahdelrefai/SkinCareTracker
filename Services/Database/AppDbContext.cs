@@ -69,6 +69,11 @@ namespace SkinCareTracker.Services.Database
                 .HasForeignKey(sp => sp.SkinRemarkId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Ignore non-mapped properties on SkinPhoto
+            modelBuilder.Entity<SkinPhoto>()
+                .Ignore(sp => sp.FullFilePath)
+                .Ignore(sp => sp.PhotoSource);
+
             // Indexes
             modelBuilder.Entity<DailyLog>()
                 .HasIndex(dl => dl.Date)
